@@ -4,7 +4,6 @@ function makeGame (rows = 5, columns = 10) {
 	this.rows = rows;
 	this.columns = columns; 
 	
-
 	this.createTable = function () {
 		
 		this.table = document.createElement('table');	
@@ -17,15 +16,13 @@ function makeGame (rows = 5, columns = 10) {
 			for (let j = 0; j < this.columns; j++) {
 			
 				let cell = document.createElement("td");
-				cell.classList.toggle("dead");
-				
+				cell.className = "dead"; 	
 				row.appendChild(cell);	
 	
 			}	
 		
 			this.tableBody.appendChild(row);	
 		}
-//is it already appended?: no, apparently it doesn't work like that 
 		this.table.appendChild(this.tableBody);
 		
 	} 
@@ -33,6 +30,13 @@ function makeGame (rows = 5, columns = 10) {
 	this.renderTable = function () {
 		this.createTable();	
 		document.getElementById('lifes-bin').appendChild(this.table);
+	}
+
+	this.whatState = function (r, c) {
+		return this.table.rows[r].cells[c].className;
+	}
+	this.setState = function(r, c, state) {
+		this.table.rows[r].cells[c].className = state;	
 	}
 }
 

@@ -1,11 +1,13 @@
 //function that uses as input how much by how much the table size should be and creates it
-
+// Now I need to store the cells, rows and such in an object. 
+// 
 function createTable (rows = 5, columns = 10) {
 
 	let table = document.createElement("table");
 	let tableBody = document.createElement('tbody');
 	
 	for (let i = 0; i < rows; i++) {
+		
 		let row = document.createElement("tr");
 
 		for (let j = 0; j < columns; j++) {
@@ -26,3 +28,24 @@ function createTable (rows = 5, columns = 10) {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {createTable();});
+
+function makeGame (rows, columns) {
+
+	this.rows = rows;
+	this.columns = columns; 
+	
+
+	this.createTable = function {
+		
+		this.table = document.createElement('table');	
+		this.table.body = document.createElement('tbody');
+
+		for (let i = 0; i < this.rows; i++) {
+			
+			let row = document.createElement("tr");
+
+		}
+		
+	} 
+
+}

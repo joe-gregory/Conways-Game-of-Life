@@ -1,51 +1,45 @@
-//function that uses as input how much by how much the table size should be and creates it
-// Now I need to store the cells, rows and such in an object. 
-// 
-function createTable (rows = 5, columns = 10) {
-
-	let table = document.createElement("table");
-	let tableBody = document.createElement('tbody');
-	
-	for (let i = 0; i < rows; i++) {
-		
-		let row = document.createElement("tr");
-
-		for (let j = 0; j < columns; j++) {
-			
-			let cell = document.createElement("td");
-			let cellText = document.createTextNode(`[${i}],[${j}]`);
-			
-			cell.appendChild(cellText);
-			row.appendChild(cell);	
-		}
-		
-		tableBody.appendChild(row);
-		
-	}
-	table.appendChild(tableBody);
-	document.getElementById('lifes-bin').appendChild(table);
-	table.setAttribute("border","2");
-}
-
-window.addEventListener('DOMContentLoaded', (event) => {createTable();});
-
-function makeGame (rows, columns) {
+// this is an object constructor function. The game is an object with methods that render the table
+function makeGame (rows = 5, columns = 10) {
 
 	this.rows = rows;
 	this.columns = columns; 
 	
 
-	this.createTable = function {
+	this.createTable = function () {
 		
 		this.table = document.createElement('table');	
-		this.table.body = document.createElement('tbody');
+		this.tableBody = document.createElement('tbody');
 
 		for (let i = 0; i < this.rows; i++) {
 			
 			let row = document.createElement("tr");
-
+		
+			for (let j = 0; j < this.columns; j++) {
+			
+				let cell = document.createElement("td");
+				cell.classList.toggle("dead");
+				
+				row.appendChild(cell);	
+	
+			}	
+		
+			this.tableBody.appendChild(row);	
 		}
+//is it already appended?: no, apparently it doesn't work like that 
+		this.table.appendChild(this.tableBody);
 		
 	} 
-
+	
+	this.renderTable = function () {
+		this.createTable();	
+		document.getElementById('lifes-bin').appendChild(this.table);
+	}
 }
+
+
+window.addEventListener('DOMContentLoaded', (event) => {startGame();});
+function startGame(r = 5, c = 10) {
+	gameOfLife = new makeGame (r, c);
+	gameOfLife.renderTable();	
+}
+ 

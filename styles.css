@@ -1,0 +1,20 @@
+table, td {
+	border: 2px solid;
+
+}
+table {
+
+}
+
+td {
+	height: 100px;
+	width: 100px;
+}
+
+.dead{
+	background-color: blue;
+}
+
+.alive {
+	background-color: red;
+}

@@ -3,29 +3,44 @@ function makeGame (rows = 5, columns = 10) {
 
 	this.rows = rows;
 	this.columns = columns; 
-	
+	this.classAlive = 'alive';
+	this.classDead = 'dead';
+	this.table = document.createElement('table');	
+	this.tableBody = document.createElement('tbody');
+	this.controlBar = document.createElement('div');
+
+	this.clearButton = document.createElement('button');
+	this.clearButton.innerHtml = 'clear';
+	this.pauseButton = document.createElement('button');
+	this.pauseButton.innerHtml = 'pause';
+	this.oneGenerationButton = document.createElement('button');
+	this.oneGenerationButton.innerHtml = 'next';
+
 	this.createTable = function () {
-		
-		this.table = document.createElement('table');	
-		this.tableBody = document.createElement('tbody');
 
 		for (let i = 0; i < this.rows; i++) {
-			
 			let row = document.createElement("tr");
-		
 			for (let j = 0; j < this.columns; j++) {
-			
 				let cell = document.createElement("td");
-				cell.className = "dead"; 	
+				cell.className = this.classDead;	
 				row.appendChild(cell);	
-	
 			}	
-		
 			this.tableBody.appendChild(row);	
 		}
 		this.table.appendChild(this.tableBody);
-		
+		this.tableBody.addEventListener('click', (cll) => {
+			const cell = cll.target.closest('td');
+			if (!cell) {return}; //quit if didn't click on cell
+			this.toggleState(cell.parentElement.rowIndex, cell.cellIndex);
+		});
 	} 
+	
+	this.createControlBar = function () {
+		this.controlBar.appendChild(this.clearButton);
+		this.controlBar.appendChild(this.pauseButton);
+		this.controlBar.appendChild(this.oneGenerationButton);
+		this.
+	}
 	
 	this.renderTable = function () {
 		this.createTable();	
@@ -35,8 +50,13 @@ function makeGame (rows = 5, columns = 10) {
 	this.whatState = function (r, c) {
 		return this.table.rows[r].cells[c].className;
 	}
+
 	this.setState = function(r, c, state) {
 		this.table.rows[r].cells[c].className = state;	
+	}
+
+	this.toggleState = function(r, c) {
+		(this.whatState(r, c) == this.classDead) ? this.setState(r, c, this.classAlive) : this.setState(r, c, this.classDead); 
 	}
 }
 

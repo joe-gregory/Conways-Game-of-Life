@@ -8,27 +8,24 @@ function makeGame (rows = 5, columns = 10) {
 	this.table = document.createElement('table');	
 	this.tableBody = document.createElement('tbody');
 	this.controlBar = document.createElement('div');
-
 	this.clearButton = document.createElement('button');
-	this.clearButton.innerHtml = 'clear';
 	this.pauseButton = document.createElement('button');
-	this.pauseButton.innerHtml = 'pause';
 	this.oneGenerationButton = document.createElement('button');
-	this.oneGenerationButton.innerHtml = 'next';
 
 	this.createTable = function () {
-
+		this.table.id = 'main-table';
+		this.tableBody.id = 'table-body'
 		for (let i = 0; i < this.rows; i++) {
 			let row = document.createElement("tr");
 			for (let j = 0; j < this.columns; j++) {
 				let cell = document.createElement("td");
 				cell.className = this.classDead;	
-				row.appendChild(cell);	
+				row.append(cell);	
 			}	
-			this.tableBody.appendChild(row);	
+			this.tableBody.append(row);	
 		}
-		this.table.appendChild(this.tableBody);
-		this.tableBody.addEventListener('click', (cll) => {
+		this.table.append(this.tableBody);
+		this.tableBody.addEventListener('pointerdown', (cll) => {
 			const cell = cll.target.closest('td');
 			if (!cell) {return}; //quit if didn't click on cell
 			this.toggleState(cell.parentElement.rowIndex, cell.cellIndex);
@@ -36,15 +33,22 @@ function makeGame (rows = 5, columns = 10) {
 	} 
 	
 	this.createControlBar = function () {
-		this.controlBar.appendChild(this.clearButton);
-		this.controlBar.appendChild(this.pauseButton);
-		this.controlBar.appendChild(this.oneGenerationButton);
-		this.
+		this.clearButton.append('clear');
+		this.pauseButton.append('pause');
+		this.oneGenerationButton.append('next');
+		this.controlBar.append(this.clearButton);
+		this.controlBar.append(this.pauseButton);
+		this.controlBar.append(this.oneGenerationButton);
+		this.clearButton.addEventListener('pointerdown', () => {
+		this.clearGame();
+		});
 	}
 	
-	this.renderTable = function () {
+	this.createAndRender = function () {
 		this.createTable();	
-		document.getElementById('lifes-bin').appendChild(this.table);
+		this.createControlBar();
+		document.getElementById('lifes-bin').append(this.table);
+		document.getElementById('lifes-bin').prepend(this.controlBar);
 	}
 
 	this.whatState = function (r, c) {
@@ -58,12 +62,20 @@ function makeGame (rows = 5, columns = 10) {
 	this.toggleState = function(r, c) {
 		(this.whatState(r, c) == this.classDead) ? this.setState(r, c, this.classAlive) : this.setState(r, c, this.classDead); 
 	}
+
+	this.clearGame = function () {
+		for (let r of this.table.rows) {
+			for (let c of r.cells) {
+				c.className = this.classDead;
+			}
+		}
+	}
 }
 
 
 window.addEventListener('DOMContentLoaded', (event) => {startGame();});
 function startGame(r = 5, c = 10) {
 	gameOfLife = new makeGame (r, c);
-	gameOfLife.renderTable();	
+	gameOfLife.createAndRender();	
 }
  

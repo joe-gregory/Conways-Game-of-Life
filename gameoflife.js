@@ -6,13 +6,21 @@ function makeGame (rows = 5, columns = 10) {
 	this.classAlive = 'alive';
 	this.classDead = 'dead';
 	this.tables = [];
+	backupThis = this;
+	this.pause = false;
+	this.generationCounter = 1;
+	
+	this.playTime = 200;
+
+
 	this.controlBar = document.createElement('div');
+	this.controlBar.id = 'controlBar';
 	this.clearButton = document.createElement('button');
 	this.pauseButton = document.createElement('button');
-	this.oneGenerationButton = document.createElement('button');
-	backupThis = this;
-	this.generationCounter = 1;
+	this.nextButton = document.createElement('button');
+	this.playButton = document.createElement('button');
 
+	
 	this.createTable = function (rows = this.rows, columns = this.columns) {
 		tbl = document.createElement('table');
 		for (let i = 0; i < rows; i++) {
@@ -47,12 +55,23 @@ function makeGame (rows = 5, columns = 10) {
 	this.createControlBar = function () {
 		this.clearButton.append('clear');
 		this.pauseButton.append('pause');
-		this.oneGenerationButton.append('next');
+		this.nextButton.append('next');
+		this.playButton.append('play');
+		this.counter = document.createElement('p');
+		this.counter.append(this.generationCounter);
+		this.counter.id = "counter";
+
 		this.controlBar.append(this.clearButton);
 		this.controlBar.append(this.pauseButton);
-		this.controlBar.append(this.oneGenerationButton);
+		this.controlBar.append(this.nextButton);
+		this.controlBar.append(this.playButton);
+		this.controlBar.append(this.counter);
+
 		this.clearButton.addEventListener('pointerdown', () => this.clearGame());
-		this.oneGenerationButton.addEventListener('pointerdown', () => this.nextGeneration());
+		this.pauseButton.addEventListener('pointerdown', () => this.pause = true)
+		this.nextButton.addEventListener('pointerdown', () => this.nextGeneration());
+		this.playButton.addEventListener('pointerdown', () => this.play());
+
 	}
 	
 	this.createAndRender = function () {
@@ -80,14 +99,26 @@ function makeGame (rows = 5, columns = 10) {
 				c.className = this.classDead;
 			}
 		}
+		this.generationCounter = 1;
+		this.counter.innerHTML = this.generationCounter;
+	}
+
+	this.play = function () {
+		this.pause = false;
+		setTimeout(function run(){
+			if (!backupThis.pause){ 
+				backupThis.nextGeneration();
+				setTimeout(run, backupThis.playTime)}
+		}, backupThis.playTime);
 	}
 
 	this.nextGeneration = function () {
 		this.tables.push(this.nextGenerationTable(this.tables[0]));	
-		this.generationCounter++;
 		this.tables[0].remove();
 		this.tables.shift();
 		this.addCellToggleEventListener(this.tables[0]);
+		this.generationCounter++;
+		this.counter.innerHTML = this.generationCounter;
 		document.getElementById('lifes-bin').append(this.tables[this.tables.length-1]);
 	}
 

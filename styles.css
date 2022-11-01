@@ -22,3 +22,13 @@ td {
 .alive {
 	background-color: #008000;
 }
+
+#controlBar
+{
+	display: inline-block;
+	vertical-align: middle;
+
+}
+#counter{
+	color: green;
+}

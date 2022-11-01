@@ -11,6 +11,7 @@ function makeGame (rows = 5, columns = 10) {
 	this.pauseButton = document.createElement('button');
 	this.oneGenerationButton = document.createElement('button');
 	backupThis = this;
+	this.generationCounter = 1;
 
 	this.createTable = function (rows = this.rows, columns = this.columns) {
 		tbl = document.createElement('table');
@@ -50,9 +51,8 @@ function makeGame (rows = 5, columns = 10) {
 		this.controlBar.append(this.clearButton);
 		this.controlBar.append(this.pauseButton);
 		this.controlBar.append(this.oneGenerationButton);
-		this.clearButton.addEventListener('pointerdown', () => {
-		this.clearGame();
-		});
+		this.clearButton.addEventListener('pointerdown', () => this.clearGame());
+		this.oneGenerationButton.addEventListener('pointerdown', () => this.nextGeneration());
 	}
 	
 	this.createAndRender = function () {
@@ -83,14 +83,60 @@ function makeGame (rows = 5, columns = 10) {
 	}
 
 	this.nextGeneration = function () {
+		this.tables.push(this.nextGenerationTable(this.tables[0]));	
+		this.generationCounter++;
+		this.tables[0].remove();
+		this.tables.shift();
+		this.addCellToggleEventListener(this.tables[0]);
+		document.getElementById('lifes-bin').append(this.tables[this.tables.length-1]);
+	}
 
-		
+	this.nextGenerationTable = function (tbl) {
+		//Returns a 'next generation' table calculated from a table tbl
+		newTbl = document.createElement('table');
+		for (let row = 0; row < tbl.rows.length; row++){
+			r = document.createElement('tr');//create row to be appended
+			for(let cell = 0; cell < tbl.rows[row].cells.length ; cell++) {
+				//figure out how many alive neighbors
+				currentState = tbl.rows[row].cells[cell].className;
+				aliveNeighbors = 0;
+				for (let rr = row - 1; rr < row + 2; rr++){
+					if (rr < 0 || rr >= tbl.rows.length){
+					} else {
+						for (let cc = cell - 1; cc < cell + 2; cc++){
+							if (cc < 0 || cc >= tbl.rows[row].cells.length || (cc == cell && rr == row)){
+							} else {
+								if (tbl.rows[rr].cells[cc].className == this.classAlive) {
+									aliveNeighbors++;
+								}
+							}
+						}
+					}
+				}
+				c = document.createElement('td');
+				//Each alive cell with one or no neighbors dies, as if by solitude
+				//Each alive cell with four or more neighbors dies, as if by overpopulation
+				//Each alive cell with two or three neighbors survivdes
+				//Each dead cell with three neighbors becomes populated
+				if (currentState == this.classAlive && aliveNeighbors > 1 && aliveNeighbors < 4){
+					c.className = this.classAlive;
+				} else if (currentState == this.classDead && aliveNeighbors == 3){
+					c.className = this.classAlive;
+				} else {
+					c.className = this.classDead;
+				}
+				r.append(c);
+			}
+			newTbl.append(r);
+			//document.getElementById('lifes-bin').append(newTbl);
+		}
+		return newTbl;
 	}
 }
 
 
 window.addEventListener('DOMContentLoaded', (event) => {startGame();});
-function startGame(r = 5, c = 10) {
+function startGame(r = 10, c = 10) {
 	gameOfLife = new makeGame (r, c);
 	gameOfLife.createAndRender();	
 }

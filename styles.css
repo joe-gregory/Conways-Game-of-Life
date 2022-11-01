@@ -3,19 +3,22 @@ table, td {
 
 }
 table {
-	background-color: green;
+	background-color:white; 
 
+}
+body{
+	background-color: black;
 }
 
 td {
-	height: 100px;
-	width: 100px;
+	height: 50px;
+	width: 50px;
 }
 
 .dead{
-	background-color: blue;
+	background-color: black; 
 }
 
 .alive {
-	background-color: red;
+	background-color: #008000;
 }

@@ -1,18 +1,23 @@
+:root{
+	--rows: 0;
+	--columns: 0;
+}
 table, td {
 	border: 2px solid;
 
 }
 table {
 	background-color:white; 
-
+	aspect-ratio: var(--columns) / var(--rows);
+	width:100%;
 }
 body{
-	background-color: black;
+
 }
 
 td {
-	height: 50px;
-	width: 50px;
+/*	height: 50px;
+	width: 50px; */
 }
 
 .dead{
@@ -27,8 +32,16 @@ td {
 {
 	display: inline-block;
 	vertical-align: middle;
-
+	align: center; 
+	
 }
+
 #counter{
 	color: green;
+	display: inline;
+}
+
+#lifes-bin{
+	width: 20%;
+	align-content: center;
 }

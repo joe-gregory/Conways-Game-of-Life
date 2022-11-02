@@ -2,22 +2,74 @@
 	--rows: 0;
 	--columns: 0;
 }
-table, td {
-	border: 2px solid;
+body{
+}
+#lifes-bin{
+	width: 20%;
+}
+#controlBar{
+
+}
+#buttonsBin{
+
+}
+#clearButton{
+
+}
+#pauseButton{
+
+}
+#nextButton{
+
+}
+#playButton{
+
+}
+#countersBin{
+
+}
+#countersLabel{
+
+}
+#counter{
+
+}
+.lifesTable{
+	background-color:white; 
+	aspect-ratio: var(--columns) / var(--rows);
+	width:100%;
+}
+#newTable{
+
+}
+#oldTable{
+
+}
+.lifesCells{
+
+}
+[data-cell-state = "dead"]{
+background-color: black; 
+}
+
+[data-cell-state = "alive"]{
+background-color: #008000;
+}
+/* agregar el data-attribute data-cellState dead y alive
+/* ====== */
+/*table, td {
 
 }
 table {
 	background-color:white; 
 	aspect-ratio: var(--columns) / var(--rows);
 	width:100%;
-}
-body{
+}*/
 
-}
-
+/*
 td {
-/*	height: 50px;
-	width: 50px; */
+	height: 50px;
+	width: 50px; 
 }
 
 .dead{
@@ -33,15 +85,11 @@ td {
 	display: inline-block;
 	vertical-align: middle;
 	align: center; 
-	
 }
-
 #counter{
 	color: green;
-	display: inline;
 }
 
 #lifes-bin{
-	width: 20%;
-	align-content: center;
-}
+	width: 20%
+}*/

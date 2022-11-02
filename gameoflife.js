@@ -1,11 +1,14 @@
 // this is an object constructor function. The game is an object with methods that render the table
-function makeGame (rows = 5, columns = 10) {
+function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:') {
 	//GLOBAL VARIABLES
 	this.rows = rows;
 	this.columns = columns; 
+	this.counterLabel = counterLabel;
 	
-	this.classAlive = 'alive';
-	this.classDead = 'dead';
+	//this.classAlive = 'alive';
+	//this.classDead = 'dead';
+	this.aliveAttribute = 'alive';
+	this.deadAttribute = 'dead';
 	this.tables = [];
 	
 	backupThis = this;
@@ -52,6 +55,7 @@ function makeGame (rows = 5, columns = 10) {
 	this.countersBin = document.createElement('div'); //Counters Bin
 	this.countersBin.id = 'countersBin'
 	this.countersLabel = document.createElement('p');
+	this.countersLabel.append(this.counterLabel);
 	this.countersLabel.id = 'countersLabel';
 	this.counter = document.createElement('p');
 	this.counter.id = 'counter';
@@ -68,13 +72,15 @@ function makeGame (rows = 5, columns = 10) {
 			let row = document.createElement("tr");
 			for (let j = 0; j < columns; j++) {
 				let cell = document.createElement("td");
-				cell.className = this.classDead;
+				cell.setAttribute('data-cell-state', this.deadAttribute);	
+				cell.classList.add('lifesCells');
 				cell.addEventListener('click', backupThis.toggleState);	
 				row.append(cell);	
 			}	
 			tbl.append(row);	
 		}
 		tbl.id ="newTable";
+		tbl.classList.add('lifesTable');
 		return tbl;
 	} 
 	
@@ -123,7 +129,7 @@ function makeGame (rows = 5, columns = 10) {
 	}
 	
 	this.toggleState = function(eventObject) {
-		(eventObject.target.className == backupThis.classDead) ? eventObject.target.className = backupThis.classAlive : eventObject.target.className = backupThis.classDead; 
+		eventObject.target.dataset.cellState == backupThis.deadAttribute ? eventObject.target.dataset.cellState = backupThis.aliveAttribute : eventObject.target.dataset.cellState = backupThis.deadAttribute;
 	}
 
 	this.nextGeneration = function () {
@@ -141,11 +147,12 @@ function makeGame (rows = 5, columns = 10) {
 		tbl.id = 'oldTable';
 		newTbl = document.createElement('table');
 		newTbl.id = 'newTable';
+		newTbl.classList.add('lifesTable');
 		for (let row = 0; row < tbl.rows.length; row++){
 			r = document.createElement('tr');//create row to be appended
 			for(let cell = 0; cell < tbl.rows[row].cells.length ; cell++) {
 				//figure out how many alive neighbors
-				currentState = tbl.rows[row].cells[cell].className;
+				currentState = tbl.rows[row].cells[cell].dataset.cellState;
 				aliveNeighbors = 0;
 				for (let rr = row - 1; rr < row + 2; rr++){
 					if (rr < 0 || rr >= tbl.rows.length){
@@ -153,24 +160,25 @@ function makeGame (rows = 5, columns = 10) {
 						for (let cc = cell - 1; cc < cell + 2; cc++){
 							if (cc < 0 || cc >= tbl.rows[row].cells.length || (cc == cell && rr == row)){
 							} else {
-								if (tbl.rows[rr].cells[cc].className == this.classAlive) {
+								if (tbl.rows[rr].cells[cc].dataset.cellState == this.aliveAttribute) {
 									aliveNeighbors++;
 								}
 							}
 						}
 					}
-				}
+				} //End figuring out how many alive neighbors
 				c = document.createElement('td');
+				c.classList.add('lifesCells');
 				//Each alive cell with one or no neighbors dies, as if by solitude
 				//Each alive cell with four or more neighbors dies, as if by overpopulation
 				//Each alive cell with two or three neighbors survivdes
 				//Each dead cell with three neighbors becomes populated
-				if (currentState == this.classAlive && aliveNeighbors > 1 && aliveNeighbors < 4){
-					c.className = this.classAlive;
-				} else if (currentState == this.classDead && aliveNeighbors == 3){
-					c.className = this.classAlive;
+				if (currentState == this.aliveAttribute && aliveNeighbors > 1 && aliveNeighbors < 4){
+					c.setAttribute('data-cell-state', this.aliveAttribute);
+				} else if (currentState == this.deadAttribute && aliveNeighbors == 3){
+					c.setAttribute('data-cell-state',this.aliveAttribute);
 				} else {
-					c.className = this.classDead;
+					c.setAttribute('data-cell-state',this.deadAttribute);
 				}
 				r.append(c);
 			}

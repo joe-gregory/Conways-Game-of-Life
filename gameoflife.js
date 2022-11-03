@@ -1,46 +1,47 @@
 // this is an object constructor function. The game is an object with methods that render the table
-function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:') {
+function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:', ms = 300) {
 	//GLOBAL VARIABLES
 	this.rows = rows;
 	this.columns = columns; 
 	this.counterLabel = counterLabel;
 	
-	//this.classAlive = 'alive';
-	//this.classDead = 'dead';
 	this.aliveAttribute = 'alive';
 	this.deadAttribute = 'dead';
 	this.tables = [];
-	
 	backupThis = this;
+	this.currentlyPlaying = false;
 	
-	this.pause = false;
 	this.generationCounter = 1;
-	this.playTime = 200;
+	this.playTime = ms;
 
 	//SETTING UP CONTROL BAR DIV AND ELEMENTS
 	//TWO CHILD DIVS: buttonsBin and countersBin
 	this.controlBar = document.createElement('div'); //Creating control bar element
-	this.controlBar.id = 'controlBar'; //Assigning control bar class Name
+	this.controlBar.id = 'controlBar'; //Assigning control bar ID
 	//***ButtonsBin Div***
 	//Creating botton's elements
 	this.buttonsBin = document.createElement('div');
 	this.buttonsBin.id = 'buttonsBin';
 	this.clearButton = document.createElement('button');
+	this.clearButton.classList.add('lifesButtons');
 	this.clearButton.id = 'clearButton';
 	this.pauseButton = document.createElement('button');
+	this.pauseButton.classList.add('lifesButtons');
 	this.pauseButton.id = 'pauseButton';
 	this.nextButton = document.createElement('button');
+	this.nextButton.classList.add('lifesButtons');
 	this.nextButton.id = 'nextButton';
 	this.playButton = document.createElement('button');
+	this.playButton.classList.add('lifesButtons');
 	this.playButton.id = 'playButton';
 	//Assigning button's inner text
-	this.clearButton.append('clear');
-	this.pauseButton.append('pause');
-	this.nextButton.append('next');
-	this.playButton.append('play');
+	this.clearButton.append('CLEAR');
+	this.pauseButton.append('PAUSE');
+	this.nextButton.append('NEXT');
+	this.playButton.append('PLAY');
 	//Link each button with its action
 	this.clearButton.addEventListener('pointerdown', () => this.clearGame());
-	this.pauseButton.addEventListener('pointerdown', () => this.pause = true)
+	this.pauseButton.addEventListener('pointerdown', () => this.currentlyPlaying = false)
 	this.nextButton.addEventListener('pointerdown', () => this.nextGeneration());
 	this.playButton.addEventListener('pointerdown', () => this.play());
 	//Adding each button to the ButtonsBin Div
@@ -64,8 +65,10 @@ function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:') {
 	this.countersBin.append(this.counter);
 	//Adding CountersBin to ControlBars div
 	this.controlBar.append(this.countersBin);
-	//Adding controlBar to lifes-bin
-	
+	//Creating div to contain tables:
+	this.tablesDiv = document.createElement('div');
+	this.tablesDiv.id = 'tablesDiv';
+
 	this.createTable = function (rows = this.rows, columns = this.columns) {
 		tbl = document.createElement('table');
 		for (let i = 0; i < rows; i++) {
@@ -79,7 +82,7 @@ function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:') {
 			}	
 			tbl.append(row);	
 		}
-		tbl.id ="newTable";
+		//tbl.id ="newTable";
 		tbl.classList.add('lifesTable');
 		return tbl;
 	} 
@@ -104,34 +107,38 @@ function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:') {
 		document.documentElement.style.setProperty("--columns", this.columns);
 		document.documentElement.style.setProperty("--rows", this.rows);
 		this.tables.push(this.createTable());
+		this.tablesDiv.append(this.tables[0]);
 		//here puedo hacer lifes-bin un objecto en este programa y append it a body	
 		document.getElementById('lifes-bin').append(this.controlBar);
-		document.getElementById('lifes-bin').append(this.tables[0]);
+		document.getElementById('lifes-bin').append(this.tablesDiv);
 	}
 
 	this.clearGame = function () {
 		for (let r of this.tables[0].rows) {
 			for (let c of r.cells) {
-				c.className = this.classDead;
+				c.dataset.cellState = this.deadAttribute;
 			}
 		}
+		this.currentlyPlaying = false;
 		this.generationCounter = 1;
 		this.counter.innerHTML = this.generationCounter;
 	}
 
 	this.play = function () {
-		this.pause = false;
+		if (this.currentlyPlaying){return} //avoids calling this function more than once
+		this.currentlyPlaying = true;
 		setTimeout(function run(){
-			if (!backupThis.pause){ 
-				backupThis.nextGeneration();
-				setTimeout(run, backupThis.playTime)}
-		}, backupThis.playTime);
+			if(!backupThis.currentlyPlaying){return};
+			backupThis.nextGeneration();
+			setTimeout(run, backupThis.playTime)}
+			, backupThis.playTime);
 	}
 	
 	this.toggleState = function(eventObject) {
 		eventObject.target.dataset.cellState == backupThis.deadAttribute ? eventObject.target.dataset.cellState = backupThis.aliveAttribute : eventObject.target.dataset.cellState = backupThis.deadAttribute;
 	}
 
+	
 	this.nextGeneration = function () {
 		this.tables.push(this.nextGenerationTable(this.tables[0]));	
 		this.tables[0].remove();
@@ -139,7 +146,8 @@ function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:') {
 		this.addCellToggleEventListener(this.tables[0]);
 		this.generationCounter++;
 		this.counter.innerHTML = this.generationCounter;
-		document.getElementById('lifes-bin').append(this.tables[this.tables.length-1]);
+		document.getElementById('tablesDiv').append(this.tables[this.tables.length-1]);
+		
 	}
 
 	this.nextGenerationTable = function (tbl) {
@@ -190,7 +198,7 @@ function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:') {
 
 
 window.addEventListener('DOMContentLoaded', (eventObject) => {startGame();});
-function startGame(r = 10, c = 10) {
+function startGame(r = 20, c = 20) {
 	gameOfLife = new makeGame (r, c);
 	gameOfLife.createAndRender();	
 }

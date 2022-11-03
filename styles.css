@@ -1,59 +1,144 @@
 :root{
+	/*these are set by JavaScript to
+	maintain the right ratio on size on 
+	table so the cells show square regardless
+	of row/columns selected*/
 	--rows: 0;
 	--columns: 0;
+	--timing: 0;
 }
+
 body{
+	font-family:'Courier New', Courier, monospace ;
 }
+
 #lifes-bin{
-	width: 20%;
+	/*width: 50%;*/
+	display:flex;
+	flex-flow:column;
+	align-items: center;
+	justify-content: center;
+	
 }
+
 #controlBar{
-
+	/*display:flex;*/
+	/*border-style: solid;
+	border-color:black ;
+	border-radius: 5px;*/
+	margin-bottom: 15px;
+	display: flex;
+	width: 83vh;
 }
-#buttonsBin{
 
+#buttonsBin{
+	display: flex;
+	flex-grow: 7;
+	font-family:'Courier New', Courier, monospace ;
+}
+
+.lifesButtons{
+	flex:1;
+	border-radius:20px;
+	transition: .2s all;
+}
+.lifesButtons:active{
+	transform: scale(0.9);
+	background-color:#008450 ;
 }
 #clearButton{
-
+	background-color:#03A062;
+	border:none;
+	color:white;
+	font-size: 18px;
+	border-right: solid;
+	border-right-color:white; 
+	font-family:'Courier New', Courier, monospace ;
 }
+
 #pauseButton{
-
+	background-color:#03A062;
+	border:none;
+	color:white;
+	font-size: 18px;
+	border-right-style: solid;
+	border-right-color:white ;
+	font-family:'Courier New', Courier, monospace ;
 }
+
 #nextButton{
-
+	background-color:#03A062;
+	border:none;
+	color:white;
+	font-size: 18px;
+	border-right-style: solid;
+	border-right-color:white;
+	font-family:'Courier New', Courier, monospace ;
 }
+
 #playButton{
-
+	background-color: #03A062;
+	border: none;
+	color:white;
+	font-size: 18px;
+	font-family:'Courier New', Courier, monospace ;
 }
+
 #countersBin{
-
+	font-size: 18px;
+	flex-grow: 1;
+	display:flex;
+	align-content: center;
+	justify-content: center;
 }
+
 #countersLabel{
-
+	/*display:inline-block;*/
 }
-#counter{
 
+#counter{
+	/*display:inline-block;*/
+}
+
+#tablesDiv{
+	display:flex;
+	flex-flow:column;
+	width:85vh;
+}
+@keyframes fade-out{
+	0%{opacity: 1;}
+	100%{opacity: 0;}
 }
 .lifesTable{
-	background-color:white; 
 	aspect-ratio: var(--columns) / var(--rows);
-	width:100%;
 }
+
 #newTable{
 
 }
+
+#newTable td{
+	animation-name:fade-out;
+	animation-duration:--timing ;
+	animation-iteration-count: infinite;
+}
+
 #oldTable{
-
+	
 }
+
 .lifesCells{
-
+	border-radius: 50%;
+	border-style:dashed;
+	border-width: 1px;
 }
+
 [data-cell-state = "dead"]{
-background-color: black; 
+	background-color: white; 
 }
 
 [data-cell-state = "alive"]{
-background-color: #008000;
+	background-color: #03A062;
 }
 /* agregar el data-attribute data-cellState dead y alive
 /* ====== */

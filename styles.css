@@ -1,11 +1,6 @@
 :root{
-	/*these are set by JavaScript to
-	maintain the right ratio on size on 
-	table so the cells show square regardless
-	of row/columns selected*/
 	--rows: 0;
 	--columns: 0;
-	--timing: 0;
 }
 
 body{
@@ -13,7 +8,6 @@ body{
 }
 
 #lifes-bin{
-	/*width: 50%;*/
 	display:flex;
 	flex-flow:column;
 	align-items: center;
@@ -22,10 +16,6 @@ body{
 }
 
 #controlBar{
-	/*display:flex;*/
-	/*border-style: solid;
-	border-color:black ;
-	border-radius: 5px;*/
 	margin-bottom: 15px;
 	display: flex;
 	width: 83vh;
@@ -93,11 +83,9 @@ body{
 }
 
 #countersLabel{
-	/*display:inline-block;*/
 }
 
 #counter{
-	/*display:inline-block;*/
 }
 
 #tablesDiv{
@@ -105,22 +93,13 @@ body{
 	flex-flow:column;
 	width:85vh;
 }
-@keyframes fade-out{
-	0%{opacity: 1;}
-	100%{opacity: 0;}
-}
+
 .lifesTable{
 	aspect-ratio: var(--columns) / var(--rows);
 }
 
 #newTable{
 
-}
-
-#newTable td{
-	animation-name:fade-out;
-	animation-duration:--timing ;
-	animation-iteration-count: infinite;
 }
 
 #oldTable{
@@ -140,41 +119,3 @@ body{
 [data-cell-state = "alive"]{
 	background-color: #03A062;
 }
-/* agregar el data-attribute data-cellState dead y alive
-/* ====== */
-/*table, td {
-
-}
-table {
-	background-color:white; 
-	aspect-ratio: var(--columns) / var(--rows);
-	width:100%;
-}*/
-
-/*
-td {
-	height: 50px;
-	width: 50px; 
-}
-
-.dead{
-	background-color: black; 
-}
-
-.alive {
-	background-color: #008000;
-}
-
-#controlBar
-{
-	display: inline-block;
-	vertical-align: middle;
-	align: center; 
-}
-#counter{
-	color: green;
-}
-
-#lifes-bin{
-	width: 20%
-}*/

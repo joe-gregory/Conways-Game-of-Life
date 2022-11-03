@@ -147,7 +147,6 @@ function makeGame (rows = 5, columns = 10, counterLabel = 'Generation:', ms = 30
 		this.generationCounter++;
 		this.counter.innerHTML = this.generationCounter;
 		document.getElementById('tablesDiv').append(this.tables[this.tables.length-1]);
-		
 	}
 
 	this.nextGenerationTable = function (tbl) {
